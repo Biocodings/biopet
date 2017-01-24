@@ -146,6 +146,7 @@
                     </transformers>
                     <filters>
                     </filters>
+                    <minimizeJar>true</minimizeJar>
                 </configuration>
                 <executions>
                     <execution>
