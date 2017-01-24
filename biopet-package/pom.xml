@@ -145,6 +145,18 @@
                         </transformer>
                     </transformers>
                     <filters>
+                        <filter>
+                            <artifact>org.broadinstitute.gatk:*</artifact>
+                            <includes>
+                                <include>**</include>
+                            </includes>
+                        </filter>
+                        <filter>
+                            <artifact>us.levk:drmaa-common</artifact>
+                            <includes>
+                                <include>**</include>
+                            </includes>
+                        </filter>
                     </filters>
                     <minimizeJar>true</minimizeJar>
                 </configuration>
