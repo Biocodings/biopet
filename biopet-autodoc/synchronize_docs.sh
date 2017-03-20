@@ -21,10 +21,10 @@ do
       eval "$BIOPET $file_no_extension -h 2> help.txt"
       if grep -Fxq "ERROR: command '$file_no_extension' does not exist in module 'tool'" help.txt
         then
-          echo "Tool $file_no_extension not found"
+          echo "The tool $file_no_extension does not exist in the latest compiled version of biopet"
         else
           ./templateparser.py -t "$TEMPLATE" -o "$destfile" -N "$file_no_extension" -L "help.txt"
-          echo "$destfile auto created"
+          echo "$destfile created"
       
       fi
       rm help.txt
