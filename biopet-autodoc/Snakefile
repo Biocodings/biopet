@@ -1,37 +1,29 @@
 
 configfile: "autodoc-tools.yml"
 biopet_dir = config['biopet_dir']
-tools_dir = config['tools_dir']
-docs_dir = config['tools_dir']
+tools_dir = config['tools_dir']}"
+docs_dir =  config['docs_dir']}"
 
 #rule all:
 #  input: 
 #    "{biopet_dir}/{docs_dir}/{tool}.md"
 
-rule create_undocumented_finder:
-  input:
-    "not_yet_documented_tools.j2"
-  output:
-    "not_yet_documented_tools.sh"
-  run:
-    from jinja2 import Environment, FileSystemLoader
-    import os
-    j2_env = Environment(loader=FileSystemLoader(os.getcwd()))
-    rendered = j2_env.get_template({input}).render(
-        biopet_dir="flop",
-        tools_dir="flip",
-        docs_dir="flap")
-    output_file=open({output}, "w")
-    output_file.seek(0)
-    output_file.write(rendered)
-    output_file.close()
-  
-rule create_tools_list:
-  input:
-    "not_yet_documented_tools.sh"
-  output:
-    "tools.txt"
-  shell:
-    "sh {input} > {output}"
 
+rule create_temp_docs:
+  input:
+    expand("{dir}/*.scala", dir= tools_dir)
+  output:
+    "tool_list.txt"
+  shell:
+    "echo '' > output ; "
+    "for file in {input} ; "
+    "do ;"
+    "file_no_path=${file##*/}; "
+    "file_no_extension=${file_no_path%.scala}; "
+    "destfile={docs_dir}/${file_no_extension.md}; "
+    "if [ ! -f $destfile ]; "
+    "then ; "
+    "echo $destfile >> {output} ; "
+    "fi" 
+    "done"
 
