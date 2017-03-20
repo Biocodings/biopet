@@ -5,8 +5,6 @@ BIOPET_DIR=~/biopet
 TOOLS_DIR=$BIOPET_DIR/biopet-tools/src/main/scala/nl/lumc/sasc/biopet/tools
 DOCS_DIR=$BIOPET_DIR/docs/tools
 
-echo "Tools not yet in docs: "
-
 for file in $TOOLS_DIR/*.scala
 do
   file_no_path=${file##*/}
