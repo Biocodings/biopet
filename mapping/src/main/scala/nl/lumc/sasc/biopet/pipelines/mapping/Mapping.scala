@@ -90,25 +90,25 @@ class Mapping(val parent: Configurable)
   // TODO: hide sampleId and libId from the command line so they do not interfere with our config values
 
   /** Readgroup Platform */
-  protected var readgroupPlatform: String = config("readgroup_platform", default = "illumina")
+  lazy val readgroupPlatform: String = config("readgroup_platform", default = "illumina")
 
   /** Readgroup platform unit */
-  protected var readgroupPlatformUnit: Option[String] = config("readgroup_platform_unit")
+  lazy val readgroupPlatformUnit: Option[String] = config("readgroup_platform_unit")
 
   /** Readgroup sequencing center */
-  protected var readgroupSequencingCenter: Option[String] = config("readgroup_sequencing_center")
+  lazy val readgroupSequencingCenter: Option[String] = config("readgroup_sequencing_center")
 
   /** Readgroup library */
-  protected var readgroupLibrary: Option[String] = config("readgroup_library")
+  lazy val readgroupLibrary: String = config("readgroup_library", default = libId.get)
 
   /** Readgroup description */
   protected var readgroupDescription: Option[String] = config("readgroup_description")
 
   /** Readgroup sequencing date */
-  protected var readgroupDate: Date = _
+  var readgroupDate: Date = _
 
   /** Readgroup predicted insert size */
-  protected var predictedInsertsize: Option[Int] = config("predicted_insertsize")
+  lazy val predictedInsertsize: Option[Int] = config("predicted_insertsize")
 
   val keepFinalBamFile: Boolean = config("keep_mapping_bam_file", default = true)
 
@@ -442,10 +442,7 @@ class Mapping(val parent: Configurable)
     hisat2.rgId = Some(readgroupId)
     hisat2.rg +:= s"PL:$readgroupPlatform"
     readgroupPlatformUnit.foreach(x => hisat2.rg +:= s"PU:$x")
-    readgroupLibrary match {
-      case Some(id) => hisat2.rg +:= s"LB:$id"
-      case _ =>
-    }
+    hisat2.rg +:= s"LB:$readgroupLibrary"
     sampleId match {
       case Some(id) => hisat2.rg +:= s"SM:$id"
       case _ =>
@@ -560,7 +557,7 @@ class Mapping(val parent: Configurable)
   def addBowtie2(R1: File, R2: Option[File], output: File): File = {
     val bowtie2 = new Bowtie2(this)
     bowtie2.rgId = Some(readgroupId)
-    bowtie2.rg +:= ("LB:" + readgroupLibrary.getOrElse(libId.get))
+    bowtie2.rg +:= ("LB:" + readgroupLibrary)
     bowtie2.rg +:= ("PL:" + readgroupPlatform)
     readgroupPlatformUnit.foreach(x => bowtie2.rg +:= ("PU:" + x))
     bowtie2.rg +:= ("SM:" + sampleId.get)
@@ -622,7 +619,7 @@ class Mapping(val parent: Configurable)
     addOrReplaceReadGroups.createIndex = true
 
     addOrReplaceReadGroups.RGID = readgroupId
-    addOrReplaceReadGroups.RGLB = readgroupLibrary.getOrElse(libId.get)
+    addOrReplaceReadGroups.RGLB = readgroupLibrary
     addOrReplaceReadGroups.RGPL = readgroupPlatform
     addOrReplaceReadGroups.RGPU = readgroupPlatformUnit.getOrElse(readgroupId)
     addOrReplaceReadGroups.RGSM = sampleId.get
